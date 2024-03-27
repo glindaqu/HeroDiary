@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "31841148126",
+    "project_id": "herodiary-825ae",
+    "storage_bucket": "herodiary-825ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31841148126:android:277e1312aff286e444f64f",
+        "android_client_info": {
+          "package_name": "com.example.herodiary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-lOnFZ6PQrowbTAOXWexKc8V6yDllucg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
