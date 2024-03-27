@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold {
                     Surface(color = MaterialTheme.colorScheme.background) {
                         NavHost(navController = navController, startDestination = "Profile") {
-                            composable("Profile") { Profile() }
+                            composable("Profile") { Profile(intent.extras) }
 //                            composable("Calendar") {  }
 //                            composable("Notes") {  }
 //                            composable("Habits") {  }

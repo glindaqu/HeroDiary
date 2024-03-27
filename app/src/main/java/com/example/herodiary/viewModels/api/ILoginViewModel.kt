@@ -1,8 +1,9 @@
 package com.example.herodiary.viewModels.api
 
-import com.google.firebase.auth.FirebaseAuth
+import android.content.Context
 
 interface ILoginViewModel {
     fun login(password: String, email: String)
     fun register(password: String, email: String)
+    fun attachContext(context: Context)
 }

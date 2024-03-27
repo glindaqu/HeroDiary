@@ -1,5 +1,7 @@
 package com.example.herodiary.screens
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,19 +12,32 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import com.example.herodiary.R
+import com.example.herodiary.viewModels.impl.ProfileViewModel
 
 @Composable
-fun Profile() {
+fun Profile(extras: Bundle?) {
+    val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
+    val email by viewModel.email.collectAsState()
+    LaunchedEffect(Unit) {
+        if (extras?.getString("email") != null)
+            viewModel.setEmail(extras.getString("email")!!)
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,7 +55,7 @@ fun Profile() {
             contentScale = ContentScale.Fit
         )
         Text(
-            text = "Glinda Quint",
+            text = email.toString(),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -52,5 +67,5 @@ fun Profile() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun Profile_Test() {
-    Profile()
+    Profile(bundleOf())
 }

@@ -1,5 +1,6 @@
 package com.example.herodiary.screens
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -36,6 +37,7 @@ fun SplashScreen() {
         alpha.animateTo(1f, animationSpec = tween(1500))
         delay(1500)
         ContextCompat.startActivity(context, Intent(context, LoginActivity::class.java), null)
+        (context as Activity).finish()
     }
     Box(
         modifier = Modifier

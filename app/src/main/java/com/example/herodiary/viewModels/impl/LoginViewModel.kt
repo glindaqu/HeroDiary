@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import com.example.herodiary.MainActivity
@@ -15,24 +16,38 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     lateinit var auth: FirebaseAuth
     private lateinit var context: WeakReference<Context>
 
-    fun attachContext(context: Context) {
+    override fun attachContext(context: Context) {
         this.context = WeakReference(context)
     }
 
     override fun login(password: String, email: String) {
-        TODO("Not yet implemented")
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                if (it.isSuccessful && context.get() != null) {
+                    startMain(email)
+                } else if (context.get() != null) {
+                    Toast.makeText(context.get()!!, "Login failed", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     override fun register(password: String, email: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful && context.get() != null) {
-                    val intent = Intent(context.get()!!, MainActivity::class.java)
-                    context.get()!!.startActivity(intent)
-                    (context.get()!! as Activity).finish()
+                    startMain(email)
                 } else if (context.get() != null) {
                     Toast.makeText(context.get()!!, "Registration failed", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun startMain(email: String) {
+        val intent = Intent(context.get()!!, MainActivity::class.java)
+        val bundle = Bundle()
+        bundle.putString("email", email)
+        intent.putExtras(bundle)
+        context.get()!!.startActivity(intent)
+        (context.get()!! as Activity).finish()
     }
 }
