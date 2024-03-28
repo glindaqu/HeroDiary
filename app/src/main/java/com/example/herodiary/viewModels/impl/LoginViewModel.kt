@@ -20,6 +20,18 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
         this.context = WeakReference(context)
     }
 
+    override fun validatePassword(password: String): Boolean {
+        return password.count() < 6
+    }
+
+    override fun validateEmail(email: String): Boolean {
+        return !email.contains("@") || !email.contains(".")
+    }
+
+    override fun comparePasswords(pass1: String, pass2: String): Boolean {
+        return pass1 != pass2
+    }
+
     override fun login(password: String, email: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
