@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -74,7 +75,10 @@ fun Login(viewModel: LoginViewModel) {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it; haveEmailError = false },
-                        modifier = Modifier.fillMaxWidth().semantics { if (haveEmailError) error("Email must contain @ and . symbols") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { if (haveEmailError) error("Email must contain @ and . symbols") }
+                            .onFocusChanged { if (!it.isFocused && email.text.isNotEmpty()) haveEmailError = viewModel.validateEmail(email.text) },
                         placeholder = { Text("Email") },
                         trailingIcon = {
                             Icon(
@@ -93,7 +97,10 @@ fun Login(viewModel: LoginViewModel) {
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it; havePasswordError = false },
-                        modifier = Modifier.fillMaxWidth().semantics {  if (havePasswordError) error("Password must be 6+ characters in length") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics {  if (havePasswordError) error("Password must be 6+ characters in length") }
+                            .onFocusChanged { if (!it.isFocused && password.text.isNotEmpty()) havePasswordError = viewModel.validatePassword(password.text) },
                         placeholder = { Text("Password") },
                         trailingIcon = {
                             Icon(
@@ -113,7 +120,10 @@ fun Login(viewModel: LoginViewModel) {
                     OutlinedTextField(
                         value = passwordAgain,
                         onValueChange = { passwordAgain = it; haveCompareError = false },
-                        modifier = Modifier.fillMaxWidth().semantics { if (haveCompareError) error("Password are not matches") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { if (haveCompareError) error("Password are not matches") }
+                            .onFocusChanged { if (!it.isFocused && passwordAgain.text.isNotEmpty()) haveCompareError = viewModel.comparePasswords(password.text, passwordAgain.text) },
                         placeholder = { Text("Password again") },
                         trailingIcon = {
                             Icon(
@@ -149,8 +159,11 @@ fun Login(viewModel: LoginViewModel) {
                 ) {
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier.fillMaxWidth().semantics { if (haveEmailError) error("Email must contain @ and . symbols") },
+                        onValueChange = { email = it; haveEmailError = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { if (haveEmailError) error("Email must contain @ and . symbols") }
+                            .onFocusChanged { if (!it.isFocused && email.text.isNotEmpty()) haveEmailError = viewModel.validateEmail(email.text) },
                         placeholder = { Text("Email") },
                         trailingIcon = {
                             Icon(
@@ -168,8 +181,11 @@ fun Login(viewModel: LoginViewModel) {
                     )
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
-                        modifier = Modifier.fillMaxWidth().semantics { if (havePasswordError) error("Password must be 6+ characters in length") },
+                        onValueChange = { password = it; havePasswordError = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { if (havePasswordError) error("Password must be 6+ characters in length") }
+                            .onFocusChanged { if (!it.isFocused && password.text.isNotEmpty()) havePasswordError = viewModel.validatePassword(password.text) },
                         placeholder = { Text("Password") },
                         trailingIcon = {
                             Icon(
