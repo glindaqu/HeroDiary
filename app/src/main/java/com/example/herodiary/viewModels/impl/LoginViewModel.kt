@@ -5,16 +5,19 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import com.example.herodiary.MainActivity
+import com.example.herodiary.state.LoginStates
 import com.example.herodiary.viewModels.api.ILoginViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.lang.ref.WeakReference
 
 class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel {
     lateinit var auth: FirebaseAuth
     private lateinit var context: WeakReference<Context>
+    val uiState = MutableStateFlow(LoginStates.INPUT)
+    private var email: String? = null
 
     override fun attachContext(context: Context) {
         this.context = WeakReference(context)
@@ -32,29 +35,37 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
         return pass1 != pass2
     }
 
+    fun updateUiState(state: LoginStates) {
+        uiState.value = state
+    }
+
     override fun login(password: String, email: String) {
+        uiState.value = LoginStates.REQUEST
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful && context.get() != null) {
-                    startMain(email)
+                    uiState.value = LoginStates.SUCCESS
+                    this.email = auth.currentUser!!.email
                 } else if (context.get() != null) {
-                    Toast.makeText(context.get()!!, "Login failed", Toast.LENGTH_SHORT).show()
+                    uiState.value = LoginStates.LOGIN_FAILED
                 }
             }
     }
 
     override fun register(password: String, email: String) {
+        uiState.value = LoginStates.REQUEST
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful && context.get() != null) {
-                    startMain(email)
+                    uiState.value = LoginStates.SUCCESS
+                    this.email = auth.currentUser!!.email
                 } else if (context.get() != null) {
-                    Toast.makeText(context.get()!!, "Registration failed", Toast.LENGTH_SHORT).show()
+                    uiState.value = LoginStates.REGISTRATION_FAILED
                 }
             }
     }
 
-    private fun startMain(email: String) {
+    fun loadProfile() {
         val intent = Intent(context.get()!!, MainActivity::class.java)
         val bundle = Bundle()
         bundle.putString("email", email)

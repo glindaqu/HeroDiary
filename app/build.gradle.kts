@@ -72,4 +72,7 @@ dependencies {
 
     //system ui controller
     implementation(libs.accompanist.systemuicontroller)
+
+    //lottie
+    implementation(libs.lottie.compose)
 }
