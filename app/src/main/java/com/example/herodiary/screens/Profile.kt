@@ -38,7 +38,6 @@ import com.example.herodiary.viewModels.impl.ProfileViewModel
 
 @Composable
 fun Profile(extras: Bundle?) {
-    //
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
     val currentUser by viewModel.currentUser.collectAsState()
     LaunchedEffect(Unit) {
@@ -48,8 +47,8 @@ fun Profile(extras: Bundle?) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
+        Spacer(modifier = Modifier.height(40.dp))
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "user_image",
@@ -66,8 +65,7 @@ fun Profile(extras: Bundle?) {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(40.dp))
-        //user stats
+        Spacer(modifier = Modifier.height(20.dp))
         LazyVerticalGrid(columns = GridCells.Fixed(3), horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier.wrapContentWidth()) {
             item {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
