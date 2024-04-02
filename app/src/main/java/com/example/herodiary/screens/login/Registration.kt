@@ -137,7 +137,7 @@ fun Registration(viewModel: LoginViewModel) {
                 keyboardType = KeyboardType.Password
             ),
             visualTransformation = PasswordVisualTransformation(),
-            label = { Text("Password again") },
+            label = { Text(passwordAgainLabel) },
             isError = haveCompareError,
             keyboardActions = KeyboardActions {
                 haveCompareError = viewModel.comparePasswords(password.text, passwordAgain.text)

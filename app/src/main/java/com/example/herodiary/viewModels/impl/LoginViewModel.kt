@@ -5,12 +5,20 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.herodiary.MainActivity
+import com.example.herodiary.database.User
+import com.example.herodiary.database.references.References
+import com.example.herodiary.database.room.models.UserRoomModel
+import com.example.herodiary.repository.UserRepository
 import com.example.herodiary.state.LoginStates
 import com.example.herodiary.viewModels.api.ILoginViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel {
@@ -18,6 +26,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     private lateinit var context: WeakReference<Context>
     val uiState = MutableStateFlow(LoginStates.INPUT)
     private var email: String? = null
+    private val userRepository = UserRepository(app)
 
     override fun attachContext(context: Context) {
         this.context = WeakReference(context)
@@ -33,6 +42,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
 
     override fun comparePasswords(pass1: String, pass2: String): Boolean {
         return pass1 != pass2
+    }
+
+    override fun sendEmail(code: String) {
+        TODO("Not yet implemented")
     }
 
     fun updateUiState(state: LoginStates) {
@@ -57,6 +70,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful && context.get() != null) {
+                    createUser(email)
                     uiState.value = LoginStates.SUCCESS
                     this.email = auth.currentUser!!.email
                 } else if (context.get() != null) {
@@ -72,5 +86,11 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
         intent.putExtras(bundle)
         context.get()!!.startActivity(intent)
         (context.get()!! as Activity).finish()
+    }
+
+    override fun createUser(email: String) {
+        viewModelScope.launch {
+            userRepository.insert(UserRoomModel(null, email))
+        }
     }
 }

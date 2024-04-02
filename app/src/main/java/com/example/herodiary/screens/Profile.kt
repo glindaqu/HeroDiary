@@ -5,10 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,11 +38,12 @@ import com.example.herodiary.viewModels.impl.ProfileViewModel
 
 @Composable
 fun Profile(extras: Bundle?) {
+    //
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
-    val email by viewModel.email.collectAsState()
+    val currentUser by viewModel.currentUser.collectAsState()
     LaunchedEffect(Unit) {
         if (extras?.getString("email") != null)
-            viewModel.setEmail(extras.getString("email")!!)
+            viewModel.initUser(extras.getString("email")!!)
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -55,17 +62,31 @@ fun Profile(extras: Bundle?) {
             contentScale = ContentScale.Fit
         )
         Text(
-            text = email.toString(),
+            text = if (currentUser == null) "null" else currentUser!!.email.toString(),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         //user stats
+        LazyVerticalGrid(columns = GridCells.Fixed(3), horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier.wrapContentWidth()) {
+            item {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Days online", textAlign = TextAlign.Center)
+                    Text(currentUser?.totalDaysOnline.toString())
+                }
+            }
+            item {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Total XP", textAlign = TextAlign.Center)
+                    Text(currentUser?.xp.toString())
+                }
+            }
+            item {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Money", textAlign = TextAlign.Center)
+                    Text(currentUser?.money.toString())
+                }
+            }
+        }
     }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun Profile_Test() {
-    Profile(bundleOf())
 }

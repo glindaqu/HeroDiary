@@ -9,4 +9,6 @@ interface ILoginViewModel {
     fun validatePassword(password: String): Boolean
     fun validateEmail(email: String): Boolean
     fun comparePasswords(pass1: String, pass2: String): Boolean
+    fun sendEmail(code: String)
+    fun createUser(email: String)
 }

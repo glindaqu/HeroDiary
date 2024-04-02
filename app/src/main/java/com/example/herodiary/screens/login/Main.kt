@@ -1,5 +1,6 @@
 package com.example.herodiary.screens.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +38,7 @@ fun LoginInput(viewModel: LoginViewModel) {
         )
         when (showRegistration) {
             true -> Registration(viewModel = viewModel)
-            else -> SignIn(viewModel = viewModel)
+            else -> LoginField(viewModel = viewModel)
         }
         TextButton(onClick = { showRegistration = !showRegistration }) {
             Text(
