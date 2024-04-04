@@ -1,7 +1,6 @@
 package com.example.herodiary.screens.task
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,8 +31,6 @@ import java.util.Locale
 @Composable
 fun TaskItem(task: TaskRoomModel, onUpdateStatus: (Boolean, Int) -> Unit) {
     var done by remember { mutableStateOf(task.done) }
-    Log.d("id", "${task.id}")
-
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier

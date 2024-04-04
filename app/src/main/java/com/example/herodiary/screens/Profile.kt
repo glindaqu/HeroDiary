@@ -46,7 +46,7 @@ fun Profile(extras: Bundle?) {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.ava1),
             contentDescription = "user_image",
             modifier = Modifier
                 .size(200.dp)
@@ -54,7 +54,7 @@ fun Profile(extras: Bundle?) {
                     clip = true
                     shape = CircleShape
                 },
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.FillBounds
         )
         Text(
             text = if (currentUser == null) "null" else currentUser!!.email.toString(),

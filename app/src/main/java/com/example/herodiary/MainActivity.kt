@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.herodiary.screens.Profile
+import com.example.herodiary.screens.shop.Shop
 import com.example.herodiary.screens.task.Task
 import com.example.herodiary.screens.components.BottomBar
 import com.example.herodiary.ui.theme.HeroDiaryTheme
@@ -39,7 +40,7 @@ class MainActivity : ComponentActivity() {
 //                            composable("Notes") {  }
 //                            composable("Habits") {  }
                             composable(Routes.TASK.title) { Task(intent.extras); selected = Routes.TASK }
-//                            composable("Shop") {  }
+                            composable(Routes.SHOP.title) { Shop(intent.extras); selected = Routes.SHOP }
                         }
                     }
                 }

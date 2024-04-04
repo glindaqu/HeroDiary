@@ -5,18 +5,17 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.herodiary.MainActivity
-import com.example.herodiary.database.User
-import com.example.herodiary.database.references.References
+import com.example.herodiary.database.ConfigKeys
+import com.example.herodiary.database.room.models.ConfigRoomModel
 import com.example.herodiary.database.room.models.UserRoomModel
+import com.example.herodiary.repository.ConfigRepository
 import com.example.herodiary.repository.UserRepository
 import com.example.herodiary.state.LoginStates
 import com.example.herodiary.viewModels.api.ILoginViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
@@ -27,6 +26,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     val uiState = MutableStateFlow(LoginStates.INPUT)
     private var email: String? = null
     private val userRepository = UserRepository(app)
+    private val configRepository = ConfigRepository(app)
 
     override fun attachContext(context: Context) {
         this.context = WeakReference(context)
@@ -92,5 +92,18 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
         viewModelScope.launch {
             userRepository.insert(UserRoomModel(null, email))
         }
+    }
+
+    fun setEmail(email: String) {
+        this.email = email
+    }
+
+    fun setEmailToDB() {
+        viewModelScope.launch {
+            configRepository.insert(ConfigRoomModel(null, ConfigKeys.EMAIL, email))
+        }
+    }
+    suspend fun getStoredEmail(): ConfigRoomModel? {
+        return configRepository.get(ConfigKeys.EMAIL)
     }
 }
