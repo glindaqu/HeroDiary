@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.herodiary.R
+import com.example.herodiary.database.room.dao.BoughtDao
 import com.example.herodiary.database.room.dao.ConfigDao
 import com.example.herodiary.database.room.dao.ShopDao
 import com.example.herodiary.database.room.dao.TaskDao
@@ -31,6 +32,7 @@ abstract class HeroBase : RoomDatabase() {
     abstract fun getTaskDao(): TaskDao
     abstract fun getShopDao(): ShopDao
     abstract fun getConfigDao(): ConfigDao
+    abstract fun getBoughtDao(): BoughtDao
 
     companion object {
         fun getDatabase(context: Context): HeroBase {

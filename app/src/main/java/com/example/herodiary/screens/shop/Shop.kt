@@ -27,7 +27,11 @@ fun Shop(extras: Bundle?) {
     val email = extras?.getString("email") ?: ""
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ShopViewModel::class.java]
     val shopItems by viewModel.all.collectAsState()
-//    val currentUser by viewModel.currentUser.collectAsState()
+    val alreadyBought by viewModel.getBought().collectAsState(initial = listOf())
+    LaunchedEffect(Unit) {
+        if (extras?.getString("email") != null)
+            viewModel.initUser(extras.getString("email")!!)
+    }
     LaunchedEffect(Unit) { viewModel.initUser(email) }
     Surface(color = blue1, modifier = Modifier.fillMaxSize()) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -36,12 +40,13 @@ fun Shop(extras: Bundle?) {
                     text = "Shop",
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 30.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp, vertical = 30.dp)
                         .padding(start = 10.dp)
                 )
             }
-            items(shopItems) {
-                ShopItem(shopRoomModel = it, viewModel = viewModel)
+            items(shopItems) { item ->
+                ShopItem(shopRoomModel = item, viewModel = viewModel, alreadyBought.contains(item.id))
             }
         }
     }

@@ -63,7 +63,11 @@ fun Profile(extras: Bundle?) {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(20.dp))
-        LazyVerticalGrid(columns = GridCells.Fixed(3), horizontalArrangement = Arrangement.Absolute.Center, modifier = Modifier.wrapContentWidth()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            horizontalArrangement = Arrangement.Absolute.Center,
+            modifier = Modifier.wrapContentWidth()
+        ) {
             item {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Days online", textAlign = TextAlign.Center)

@@ -24,11 +24,12 @@ import com.example.herodiary.database.room.models.ShopRoomModel
 import com.example.herodiary.viewModels.impl.ShopViewModel
 
 @Composable
-fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel) {
+fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel, isBought: Boolean) {
     Column(
         modifier = Modifier.wrapContentWidth().padding(horizontal = 10.dp)
             .clickable {
                 viewModel.updateImage(shopRoomModel.drawable!!)
+                viewModel.buy(shopRoomModel.id!!)
             }
     ) {
         Image(
@@ -41,7 +42,7 @@ fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel) {
                 .clip(RoundedCornerShape(5.dp))
         )
         Text(
-            text = shopRoomModel.cost.toString() + "$",
+            text = if (isBought) "Set" else shopRoomModel.cost.toString() + "$",
             modifier = Modifier.fillMaxWidth().padding(10.dp),
             textAlign = TextAlign.End,
             fontSize = 18.sp,
