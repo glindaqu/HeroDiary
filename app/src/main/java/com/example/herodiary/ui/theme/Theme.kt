@@ -21,10 +21,9 @@ fun HeroDiaryTheme(
 ) {
     val view = LocalView.current
     val systemUiController = rememberSystemUiController()
-    val bg = MaterialTheme.colorScheme.background
     val window = (view.context as Activity).window
     SideEffect {
-        systemUiController.setSystemBarsColor(bg)
+        systemUiController.setSystemBarsColor(blue1)
         WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
     }
     MaterialTheme(

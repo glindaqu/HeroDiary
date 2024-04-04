@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.herodiary"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -80,4 +80,6 @@ dependencies {
 
     //lottie
     implementation(libs.lottie.compose)
+
+    implementation(libs.calendar)
 }
