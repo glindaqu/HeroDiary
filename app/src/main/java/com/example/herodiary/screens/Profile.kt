@@ -36,6 +36,7 @@ import com.example.herodiary.viewModels.impl.ProfileViewModel
 fun Profile(extras: Bundle?) {
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
     val currentUser by viewModel.currentUser.collectAsState()
+    val currentImage by viewModel.getImage().collectAsState(initial = null)
     LaunchedEffect(Unit) {
         if (extras?.getString("email") != null)
             viewModel.initUser(extras.getString("email")!!)
@@ -46,7 +47,7 @@ fun Profile(extras: Bundle?) {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
         Image(
-            painter = painterResource(id = R.drawable.ava1),
+            painter = painterResource(id = currentImage ?: R.drawable.ic_launcher_background),
             contentDescription = "user_image",
             modifier = Modifier
                 .size(200.dp)

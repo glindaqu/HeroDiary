@@ -41,7 +41,7 @@ fun Shop(extras: Bundle?) {
                 )
             }
             items(shopItems) {
-                ShopItem(shopRoomModel = it)
+                ShopItem(shopRoomModel = it, viewModel = viewModel)
             }
         }
     }

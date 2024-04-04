@@ -6,9 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "config")
 data class ConfigRoomModel(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
-    @ColumnInfo(name = "key")
+    @PrimaryKey(autoGenerate = false)
     val key: String,
     @ColumnInfo(name = "value")
     val value: String? = null

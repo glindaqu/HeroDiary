@@ -1,6 +1,7 @@
 package com.example.herodiary.repository
 
 import android.app.Application
+import com.example.herodiary.database.ConfigKeys
 import com.example.herodiary.database.room.HeroBase
 import com.example.herodiary.database.room.dao.ConfigDao
 import com.example.herodiary.database.room.models.ConfigRoomModel
@@ -19,5 +20,9 @@ class ConfigRepository(application: Application) {
     }
     suspend fun insert(configRoomModel: ConfigRoomModel) {
         configDao.insert(configRoomModel)
+    }
+
+    fun getImageFlow(): Flow<Int> {
+        return configDao.getImageFlow(ConfigKeys.IMAGE)
     }
 }

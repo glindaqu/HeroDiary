@@ -100,7 +100,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
 
     fun setEmailToDB() {
         viewModelScope.launch {
-            configRepository.insert(ConfigRoomModel(null, ConfigKeys.EMAIL, email))
+            configRepository.insert(ConfigRoomModel(ConfigKeys.EMAIL, email))
         }
     }
     suspend fun getStoredEmail(): ConfigRoomModel? {

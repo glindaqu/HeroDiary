@@ -1,6 +1,7 @@
 package com.example.herodiary.screens.shop
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,10 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.herodiary.R
 import com.example.herodiary.database.room.models.ShopRoomModel
+import com.example.herodiary.viewModels.impl.ShopViewModel
 
 @Composable
-fun ShopItem(shopRoomModel: ShopRoomModel) {
-    Column(modifier = Modifier.wrapContentWidth().padding(horizontal = 10.dp)) {
+fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel) {
+    Column(
+        modifier = Modifier.wrapContentWidth().padding(horizontal = 10.dp)
+            .clickable {
+                viewModel.updateImage(shopRoomModel.drawable!!)
+            }
+    ) {
         Image(
             painter = painterResource(id = shopRoomModel.drawable!!),
             contentDescription = null,
@@ -41,10 +48,4 @@ fun ShopItem(shopRoomModel: ShopRoomModel) {
             fontWeight = FontWeight.Medium
         )
     }
-}
-
-@Preview
-@Composable
-fun Test_ShopItem() {
-    ShopItem(shopRoomModel = ShopRoomModel(1, 100, R.drawable.ava1))
 }
