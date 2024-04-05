@@ -1,7 +1,9 @@
 package com.example.herodiary.viewModels.impl
 
 import android.app.Application
+import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.herodiary.R
@@ -17,6 +19,7 @@ import com.example.herodiary.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val shopRepository = ShopRepository(application)
@@ -28,6 +31,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         ShopRoomModel(2, 100, R.drawable.ava2),
     ))
     private val currentUser = MutableStateFlow<UserRoomModel?>(null)
+    private lateinit var context: WeakReference<Context>
+
+    fun attachContext(context: Context) {
+        this.context = WeakReference(context)
+    }
 
     fun getAll(): Flow<List<ShopRoomModel>> {
         return shopRepository.getAll()
@@ -36,9 +44,14 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         return boughtRepository.getAll(currentUser.value?.email ?: "")
     }
 
-    fun buy(id: Int) {
+    fun buy(id: Int, cost: Int) {
         viewModelScope.launch {
-            boughtRepository.insert(BoughtRoomModel(null, currentUser.value?.email, id))
+            if (currentUser.value?.money!! >= cost) {
+                boughtRepository.insert(BoughtRoomModel(null, currentUser.value?.email, id))
+                userRepository.updateMoney(email = currentUser.value?.email!!, money = currentUser.value?.money!! - cost)
+            } else if (context.get() != null) {
+                Toast.makeText(context.get()!!, "Not enough money!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -52,5 +65,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             configRepository.insert(ConfigRoomModel(ConfigKeys.IMAGE, drawable.toString()))
         }
+    }
+
+    fun getImage(): Flow<Int> {
+        return configRepository.getImageFlow()
     }
 }

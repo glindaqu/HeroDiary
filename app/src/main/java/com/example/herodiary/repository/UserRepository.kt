@@ -23,4 +23,7 @@ class UserRepository(app: Application) {
     suspend fun insert(user: UserRoomModel) {
         userDao.insert(user)
     }
+    suspend fun updateMoney(money: Int, email: String) {
+        userDao.updateMoney(money, email)
+    }
 }

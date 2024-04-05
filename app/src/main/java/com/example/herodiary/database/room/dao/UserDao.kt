@@ -18,4 +18,6 @@ interface UserDao {
     fun getAll(): Flow<List<UserRoomModel>>
     @Query("SELECT * FROM users WHERE `email` = :email")
     suspend fun getByEmail(email: String): UserRoomModel?
+    @Query("UPDATE users SET money = :money WHERE email = :email")
+    suspend fun updateMoney(money: Int, email: String)
 }

@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -24,12 +28,19 @@ import com.example.herodiary.database.room.models.ShopRoomModel
 import com.example.herodiary.viewModels.impl.ShopViewModel
 
 @Composable
-fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel, isBought: Boolean) {
+fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel, isBought: Boolean, isCurrent: Boolean) {
+    var textState by remember { mutableStateOf(shopRoomModel.cost.toString() + "$") }
+    when {
+        isCurrent -> textState = "In Use"
+        isBought -> textState = "Set"
+    }
     Column(
-        modifier = Modifier.wrapContentWidth().padding(horizontal = 10.dp)
+        modifier = Modifier
+            .wrapContentWidth()
+            .padding(horizontal = 10.dp)
             .clickable {
                 viewModel.updateImage(shopRoomModel.drawable!!)
-                viewModel.buy(shopRoomModel.id!!)
+                if (!isBought) viewModel.buy(shopRoomModel.id!!, shopRoomModel.cost)
             }
     ) {
         Image(
@@ -42,8 +53,10 @@ fun ShopItem(shopRoomModel: ShopRoomModel, viewModel: ShopViewModel, isBought: B
                 .clip(RoundedCornerShape(5.dp))
         )
         Text(
-            text = if (isBought) "Set" else shopRoomModel.cost.toString() + "$",
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            text = textState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
             textAlign = TextAlign.End,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium

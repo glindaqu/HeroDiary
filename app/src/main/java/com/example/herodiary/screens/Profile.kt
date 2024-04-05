@@ -83,7 +83,7 @@ fun Profile(extras: Bundle?) {
             item {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Money", textAlign = TextAlign.Center)
-                    Text(currentUser?.money.toString())
+                    Text(currentUser?.money.toString() + "$")
                 }
             }
         }

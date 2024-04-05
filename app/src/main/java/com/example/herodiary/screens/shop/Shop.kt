@@ -24,15 +24,15 @@ import com.example.herodiary.viewModels.impl.ShopViewModel
 
 @Composable
 fun Shop(extras: Bundle?) {
-    val email = extras?.getString("email") ?: ""
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ShopViewModel::class.java]
     val shopItems by viewModel.all.collectAsState()
     val alreadyBought by viewModel.getBought().collectAsState(initial = listOf())
+    val currentImage by viewModel.getImage().collectAsState(initial = null)
+    viewModel.attachContext(LocalContext.current)
     LaunchedEffect(Unit) {
         if (extras?.getString("email") != null)
             viewModel.initUser(extras.getString("email")!!)
     }
-    LaunchedEffect(Unit) { viewModel.initUser(email) }
     Surface(color = blue1, modifier = Modifier.fillMaxSize()) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             item {
@@ -46,7 +46,12 @@ fun Shop(extras: Bundle?) {
                 )
             }
             items(shopItems) { item ->
-                ShopItem(shopRoomModel = item, viewModel = viewModel, alreadyBought.contains(item.id))
+                ShopItem(
+                    shopRoomModel = item,
+                    viewModel = viewModel,
+                    isBought = alreadyBought.contains(item.id),
+                    isCurrent = currentImage == item.drawable
+                )
             }
         }
     }
