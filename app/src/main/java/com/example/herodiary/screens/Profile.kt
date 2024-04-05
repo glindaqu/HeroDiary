@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,62 +34,80 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.herodiary.R
+import com.example.herodiary.screens.task.AgendaTaskItem
+import com.example.herodiary.screens.task.TaskItem
 import com.example.herodiary.viewModels.impl.ProfileViewModel
 
 @Composable
 fun Profile(extras: Bundle?) {
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
-    val currentUser by viewModel.currentUser.collectAsState()
-    val currentImage by viewModel.getImage().collectAsState(initial = null)
     LaunchedEffect(Unit) {
         if (extras?.getString("email") != null)
             viewModel.initUser(extras.getString("email")!!)
     }
-    Column(
+    val currentUser by viewModel.currentUser.collectAsState()
+    val currentImage by viewModel.getImage().collectAsState(initial = null)
+    val tasks by viewModel.getTasks(currentUser?.email ?: "").collectAsState(initial = listOf())
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        Image(
-            painter = painterResource(id = currentImage ?: R.drawable.ic_launcher_background),
-            contentDescription = "user_image",
-            modifier = Modifier
-                .size(200.dp)
-                .graphicsLayer {
-                    clip = true
-                    shape = CircleShape
-                },
-            contentScale = ContentScale.FillBounds
-        )
-        Text(
-            text = if (currentUser == null) "null" else currentUser!!.email.toString(),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            horizontalArrangement = Arrangement.Absolute.Center,
-            modifier = Modifier.wrapContentWidth()
-        ) {
-            item {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Days online", textAlign = TextAlign.Center)
-                    Text(currentUser?.totalDaysOnline.toString())
+        item {
+            Spacer(modifier = Modifier.height(40.dp))
+            Image(
+                painter = painterResource(id = currentImage ?: R.drawable.ic_launcher_background),
+                contentDescription = "user_image",
+                modifier = Modifier
+                    .size(200.dp)
+                    .graphicsLayer {
+                        clip = true
+                        shape = CircleShape
+                    },
+                contentScale = ContentScale.FillBounds
+            )
+            Text(
+                text = if (currentUser == null) "null" else currentUser!!.email.toString(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                horizontalArrangement = Arrangement.Absolute.Center,
+                modifier = Modifier.fillMaxWidth().height(50.dp)
+            ) {
+                item {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Days online", textAlign = TextAlign.Center)
+                        Text(currentUser?.totalDaysOnline.toString())
+                    }
+                }
+                item {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Total XP", textAlign = TextAlign.Center)
+                        Text(currentUser?.xp.toString())
+                    }
+                }
+                item {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Money", textAlign = TextAlign.Center)
+                        Text(currentUser?.money.toString() + "$")
+                    }
                 }
             }
-            item {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Total XP", textAlign = TextAlign.Center)
-                    Text(currentUser?.xp.toString())
-                }
-            }
-            item {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Money", textAlign = TextAlign.Center)
-                    Text(currentUser?.money.toString() + "$")
-                }
-            }
+            Text(
+                text = "Agenda",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .padding(top = 30.dp, bottom = 15.dp),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                fontSize = 18.sp
+            )
+        }
+        items(tasks) {
+            AgendaTaskItem(task = it)
         }
     }
 }
