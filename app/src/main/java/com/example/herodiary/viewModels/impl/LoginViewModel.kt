@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.herodiary.MainActivity
@@ -80,12 +81,23 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     }
 
     fun loadProfile() {
+        checkLastLogin()
         val intent = Intent(context.get()!!, MainActivity::class.java)
         val bundle = Bundle()
         bundle.putString("email", email)
         intent.putExtras(bundle)
         context.get()!!.startActivity(intent)
         (context.get()!! as Activity).finish()
+    }
+
+    private fun checkLastLogin() {
+        viewModelScope.launch {
+            val lastLogin = configRepository.get(ConfigKeys.LAST_LOGIN)
+            if (lastLogin == null || lastLogin.value!!.toLong() != System.currentTimeMillis()) {
+                userRepository.updateTotalDays(email!!)
+            }
+            configRepository.insert(ConfigRoomModel(ConfigKeys.LAST_LOGIN, System.currentTimeMillis().toString()))
+        }
     }
 
     override fun createUser(email: String) {

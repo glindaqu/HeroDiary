@@ -20,4 +20,6 @@ interface UserDao {
     suspend fun getByEmail(email: String): UserRoomModel?
     @Query("UPDATE users SET money = :money WHERE email = :email")
     suspend fun updateMoney(money: Int, email: String)
+    @Query("UPDATE users SET totalDaysOnline = totalDaysOnline + 1 WHERE email = :email")
+    suspend fun updateTotalDays(email: String)
 }

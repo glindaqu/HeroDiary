@@ -26,4 +26,8 @@ class UserRepository(app: Application) {
     suspend fun updateMoney(money: Int, email: String) {
         userDao.updateMoney(money, email)
     }
+
+    suspend fun updateTotalDays(email: String) {
+        userDao.updateTotalDays(email)
+    }
 }
