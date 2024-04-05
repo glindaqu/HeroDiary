@@ -19,5 +19,7 @@ data class TaskRoomModel(
     @ColumnInfo(name = "creatorEmail")
     val creatorEmail: String? = null,
     @ColumnInfo(name = "reward")
-    val reward: Int = 100
+    val reward: Int = 100,
+    @ColumnInfo(name = "xp")
+    val xp: Int = 100
 )

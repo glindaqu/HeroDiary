@@ -19,7 +19,7 @@ fun Task(extras: Bundle?) {
     val taskList by viewModel.getAllByCreatorEmail(email).collectAsState(initial = null)
     val uiState by viewModel.uiState.collectAsState()
     when (uiState) {
-        TaskScreenStates.VIEW -> View(taskList = taskList?.reversed(), viewModel = viewModel)
+        TaskScreenStates.VIEW -> View(taskList = taskList?.reversed(), viewModel = viewModel, email = email)
         else -> { Create(email = email, viewModel = viewModel) }
     }
 }

@@ -81,13 +81,17 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     }
 
     fun loadProfile() {
-        checkLastLogin()
-        val intent = Intent(context.get()!!, MainActivity::class.java)
-        val bundle = Bundle()
-        bundle.putString("email", email)
-        intent.putExtras(bundle)
-        context.get()!!.startActivity(intent)
-        (context.get()!! as Activity).finish()
+        viewModelScope.launch {
+            if (userRepository.getByEmail(email!!) == null)
+                createUser(email!!)
+            checkLastLogin()
+            val intent = Intent(context.get()!!, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("email", email)
+            intent.putExtras(bundle)
+            context.get()!!.startActivity(intent)
+            (context.get()!! as Activity).finish()
+        }
     }
 
     private fun checkLastLogin() {

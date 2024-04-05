@@ -24,7 +24,7 @@ import com.example.herodiary.viewModels.impl.TaskViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun View(taskList: List<TaskRoomModel>?, viewModel: TaskViewModel) {
+fun View(taskList: List<TaskRoomModel>?, viewModel: TaskViewModel, email: String) {
     Scaffold(
         containerColor = blue1,
         floatingActionButton = {
@@ -48,7 +48,7 @@ fun View(taskList: List<TaskRoomModel>?, viewModel: TaskViewModel) {
             }
             items(taskList ?: listOf()) { item ->
                 TaskItem(item) { status, id ->
-                    viewModel.updateStatus(status, id)
+                    viewModel.updateStatus(status, id, email)
                 }
             }
         }

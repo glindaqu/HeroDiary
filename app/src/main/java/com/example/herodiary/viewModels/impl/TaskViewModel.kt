@@ -30,9 +30,11 @@ class TaskViewModel(application: Application) : AndroidViewModel(application), I
     fun updateUiState(state: TaskScreenStates) {
         uiState.value = state
     }
-    fun updateStatus(status: Boolean, targetTaskId: Int) {
+    fun updateStatus(status: Boolean, targetTaskId: Int, email: String) {
         viewModelScope.launch {
             taskRepository.updateStatus(status, targetTaskId)
+            userRepository.updateMoney(userRepository.getByEmail(email)?.money!! + taskRepository.getById(targetTaskId)?.reward!!, email)
+            userRepository.updateXp(taskRepository.getById(targetTaskId)?.xp!!, email)
         }
     }
 }

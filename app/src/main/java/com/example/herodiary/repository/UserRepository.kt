@@ -30,4 +30,8 @@ class UserRepository(app: Application) {
     suspend fun updateTotalDays(email: String) {
         userDao.updateTotalDays(email)
     }
+
+    suspend fun updateXp(added: Int, email: String) {
+        userDao.updateXp(added, email)
+    }
 }

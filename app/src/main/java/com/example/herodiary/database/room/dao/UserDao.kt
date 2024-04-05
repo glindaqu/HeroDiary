@@ -22,4 +22,6 @@ interface UserDao {
     suspend fun updateMoney(money: Int, email: String)
     @Query("UPDATE users SET totalDaysOnline = totalDaysOnline + 1 WHERE email = :email")
     suspend fun updateTotalDays(email: String)
+    @Query("UPDATE users SET xp = xp + :added WHERE email = :email")
+    suspend fun updateXp(added: Int, email: String)
 }

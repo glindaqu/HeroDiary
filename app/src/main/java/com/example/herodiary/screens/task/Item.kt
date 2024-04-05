@@ -62,7 +62,7 @@ fun TaskItem(task: TaskRoomModel, onUpdateStatus: (Boolean, Int) -> Unit) {
                     text = if (task.deadline != null) SimpleDateFormat("MMMM, dd", Locale.ENGLISH).format(task.deadline) else "null",
                     color = Color.Black.copy(0.7f)
                 )
-                Checkbox(checked = done?:false, onCheckedChange = {
+                Checkbox(checked = done?:false, enabled = !done!!, onCheckedChange = {
                     done = it
                     onUpdateStatus(done!!, task.id!!)
                 })
