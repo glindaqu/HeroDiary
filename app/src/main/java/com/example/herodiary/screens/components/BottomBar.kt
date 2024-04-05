@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -32,10 +33,18 @@ fun BottomBar(selected: Route, navHostController: NavHostController) {
                     }
                           },
                 icon = {
-                    Icon(
-                        imageVector = if (selected == it) it.selectedIcon else it.unselectedIcon,
-                        contentDescription = null
-                    )
+                    if (it.selectedIcon != null && it.unselectedIcon != null) {
+                        Icon(
+                            imageVector = if (selected == it) it.selectedIcon else it.unselectedIcon,
+                            contentDescription = null
+                        )
+                    } else if (it.selectedDraw != null && it.unselectedDraw != null) {
+                        Icon(
+                            painter = painterResource(id = if (selected == it) it.selectedDraw else it.unselectedDraw),
+                            contentDescription = null
+                        )
+                    }
+
                 },
                 label = { Text(it.title, fontWeight = if (selected == it) FontWeight.Bold else FontWeight.Normal) },
                 colors = NavigationBarItemDefaults.colors(indicatorColor = Color(0x19EEEEEE))

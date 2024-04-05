@@ -90,7 +90,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
 
     override fun createUser(email: String) {
         viewModelScope.launch {
-            userRepository.insert(UserRoomModel(null, email))
+            userRepository.insert(UserRoomModel(null, email, 0, 0, 1000))
         }
     }
 

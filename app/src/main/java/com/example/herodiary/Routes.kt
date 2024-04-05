@@ -11,8 +11,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 data class Route(
     val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null,
+    val selectedDraw: Int? = null,
+    val unselectedDraw: Int? = null
 ) {
     override fun toString(): String {
         return title
@@ -23,6 +25,7 @@ object Routes {
     val TASK = Route("Tasks", Icons.Filled.Check, Icons.Outlined.Check)
     val PROFILE = Route("Profile", Icons.Filled.Person, Icons.Outlined.Person)
     val SHOP = Route("Shop", Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart)
+    val CALENDAR = Route("Calendar", selectedDraw = R.drawable.calendar_filled, unselectedDraw = R.drawable.calendar_outlined)
 
-    val all = listOf(TASK, PROFILE, SHOP)
+    val all = listOf(TASK, PROFILE, SHOP, CALENDAR)
 }

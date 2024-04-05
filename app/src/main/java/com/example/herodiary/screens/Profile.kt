@@ -55,7 +55,7 @@ fun Profile(extras: Bundle?) {
         item {
             Spacer(modifier = Modifier.height(40.dp))
             Image(
-                painter = painterResource(id = currentImage ?: R.drawable.ic_launcher_background),
+                painter = painterResource(currentImage ?: R.drawable.ic_launcher_background),
                 contentDescription = "user_image",
                 modifier = Modifier
                     .size(200.dp)

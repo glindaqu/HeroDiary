@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.herodiary.screens.Profile
+import com.example.herodiary.screens.calendar.CalendarScreen
 import com.example.herodiary.screens.shop.Shop
 import com.example.herodiary.screens.task.Task
 import com.example.herodiary.screens.components.BottomBar
@@ -36,9 +37,8 @@ class MainActivity : ComponentActivity() {
                     Surface(color = blue1, modifier = Modifier.padding(it)) {
                         NavHost(navController = navController, startDestination = Routes.PROFILE.title) {
                             composable(Routes.PROFILE.title) { Profile(intent.extras); selected = Routes.PROFILE }
-//                            composable("Calendar") {  }
+                            composable(Routes.CALENDAR.title) { CalendarScreen(); selected = Routes.CALENDAR }
 //                            composable("Notes") {  }
-//                            composable("Habits") {  }
                             composable(Routes.TASK.title) { Task(intent.extras); selected = Routes.TASK }
                             composable(Routes.SHOP.title) { Shop(intent.extras); selected = Routes.SHOP }
                         }
