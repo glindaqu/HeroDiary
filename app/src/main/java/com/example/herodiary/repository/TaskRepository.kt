@@ -27,4 +27,12 @@ class TaskRepository(application: Application) {
     suspend fun updateStatus(status: Boolean, targetTaskId: Int) {
         taskDao.updateStatus(status, targetTaskId)
     }
+
+    fun getAllLaterThan(date: Long, email: String): Flow<List<TaskRoomModel>> {
+        return taskDao.getAllLaterThan(date, email)
+    }
+
+    fun getAllByDate(date: Long, email: String): Flow<List<TaskRoomModel>> {
+        return taskDao.getAllByDate(date, email)
+    }
 }

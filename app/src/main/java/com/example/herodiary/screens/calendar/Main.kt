@@ -1,7 +1,6 @@
 package com.example.herodiary.screens.calendar
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,10 +21,14 @@ import java.util.Locale
 
 @Composable
 fun CalendarScreen(navController: NavHostController) {
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(10.dp)) {
+    LazyColumn(modifier = Modifier
+        .fillMaxSize()
+        .padding(10.dp)) {
         item {
             Row(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -34,7 +37,7 @@ fun CalendarScreen(navController: NavHostController) {
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 30.dp)
+                        .padding(vertical = 20.dp)
                         .padding(start = 10.dp)
                 )
                 Text(

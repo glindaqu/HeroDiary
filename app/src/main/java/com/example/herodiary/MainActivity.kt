@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                                 route = Routes.DAY_INFO.title + "/{date}",
                                 arguments = listOf(navArgument("date") { NavType.StringType } )
                             ) {
-                                DayInfo(it.arguments?.getString("date")!!.toLong()) {
+                                DayInfo(date = it.arguments?.getString("date")!!.toLong(), extras = intent.extras) {
                                     navController.navigateUp()
                                 }
                             }

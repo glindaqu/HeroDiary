@@ -21,4 +21,8 @@ interface TaskDao {
     fun getAllByCreatorEmail(email: String): Flow<List<TaskRoomModel>>
     @Query("UPDATE tasks SET done = :status WHERE id = :id")
     suspend fun updateStatus(status: Boolean, id: Int)
+    @Query("SELECT * FROM tasks WHERE deadline >= :date AND creatorEmail = :email")
+    fun getAllLaterThan(date: Long, email: String): Flow<List<TaskRoomModel>>
+    @Query("SELECT * FROM tasks WHERE deadline = :date AND creatorEmail = :email")
+    fun getAllByDate(date: Long, email: String): Flow<List<TaskRoomModel>>
 }
