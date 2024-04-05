@@ -15,12 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.herodiary.screens.components.calendar.EssentialCalendar
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(navController: NavHostController) {
     LazyColumn(modifier = Modifier.fillMaxSize().padding(10.dp)) {
         item {
             Row(
@@ -45,7 +46,7 @@ fun CalendarScreen() {
                         .padding(start = 10.dp)
                 )
             }
-            EssentialCalendar()
+            EssentialCalendar(navController)
         }
     }
 }

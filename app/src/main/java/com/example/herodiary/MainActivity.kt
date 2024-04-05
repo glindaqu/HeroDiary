@@ -2,6 +2,7 @@ package com.example.herodiary
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -12,11 +13,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.herodiary.screens.Profile
 import com.example.herodiary.screens.calendar.CalendarScreen
+import com.example.herodiary.screens.calendar.DayInfo
 import com.example.herodiary.screens.shop.Shop
 import com.example.herodiary.screens.task.Task
 import com.example.herodiary.screens.components.BottomBar
@@ -33,12 +37,19 @@ class MainActivity : ComponentActivity() {
             HeroDiaryTheme {
                 Scaffold(
                     bottomBar = { BottomBar(selected = selected, navHostController = navController) }
-                ) {
-                    Surface(color = blue1, modifier = Modifier.padding(it)) {
+                ) { paddingValues ->
+                    Surface(color = blue1, modifier = Modifier.padding(paddingValues)) {
                         NavHost(navController = navController, startDestination = Routes.PROFILE.title) {
                             composable(Routes.PROFILE.title) { Profile(intent.extras); selected = Routes.PROFILE }
-                            composable(Routes.CALENDAR.title) { CalendarScreen(); selected = Routes.CALENDAR }
-//                            composable("Notes") {  }
+                            composable(Routes.CALENDAR.title) { CalendarScreen(navController); selected = Routes.CALENDAR }
+                            composable(
+                                route = Routes.DAY_INFO.title + "/{date}",
+                                arguments = listOf(navArgument("date") { NavType.StringType } )
+                            ) {
+                                DayInfo(it.arguments?.getString("date")!!.toLong()) {
+                                    navController.navigateUp()
+                                }
+                            }
                             composable(Routes.TASK.title) { Task(intent.extras); selected = Routes.TASK }
                             composable(Routes.SHOP.title) { Shop(intent.extras); selected = Routes.SHOP }
                         }

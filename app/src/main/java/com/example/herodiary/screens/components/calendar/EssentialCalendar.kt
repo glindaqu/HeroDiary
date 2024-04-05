@@ -1,6 +1,8 @@
 package com.example.herodiary.screens.components.calendar
 
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,18 +18,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.herodiary.Routes
 import com.example.herodiary.shared.dayOnly
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 
+@SuppressLint("SimpleDateFormat")
 @Composable
-fun EssentialCalendar() {
+fun EssentialCalendar(navController: NavHostController) {
     val weekdayTitles = listOf("mon", "tue", "wed", "thu", "fri", "sat", "sun")
     val currentDay = dayOnly.format(Date()).toInt()
     val month = LocalDate.now().month
@@ -39,7 +43,9 @@ fun EssentialCalendar() {
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
             LazyVerticalGrid(
-                modifier = Modifier.padding(vertical = 5.dp).height(30.dp),
+                modifier = Modifier
+                    .padding(vertical = 5.dp)
+                    .height(30.dp),
                 columns = GridCells.Fixed(7),
             ) {
                 items(weekdayTitles) {
@@ -68,16 +74,13 @@ fun EssentialCalendar() {
                     EssentialCalendarNumberItem(
                         text = it.toString(),
                         isSelected = it == currentDay,
-                        clickable = {}
+                        clickable = {
+                            navController.navigate(Routes.DAY_INFO.title + "/" + (SimpleDateFormat("M, d yyyy").parse("${month.value}, $it ${LocalDate.now().year}")!!).time.toString())
+                            Log.d("date", Routes.DAY_INFO.title + "/" + (SimpleDateFormat("M, d yyyy").parse("${month.value}, $it ${LocalDate.now().year}")!!).time)
+                        }
                     )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EssentialCalendar_Test() {
-    EssentialCalendar()
 }
