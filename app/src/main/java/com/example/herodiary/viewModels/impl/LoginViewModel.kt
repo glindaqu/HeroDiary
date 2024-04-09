@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.herodiary.MainActivity
@@ -14,12 +13,14 @@ import com.example.herodiary.database.room.models.ConfigRoomModel
 import com.example.herodiary.database.room.models.UserRoomModel
 import com.example.herodiary.repository.ConfigRepository
 import com.example.herodiary.repository.UserRepository
+import com.example.herodiary.shared.getDateDiff
 import com.example.herodiary.state.LoginStates
 import com.example.herodiary.viewModels.api.ILoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
+import java.util.Date
 
 class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel {
     lateinit var auth: FirebaseAuth
@@ -97,10 +98,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     private fun checkLastLogin() {
         viewModelScope.launch {
             val lastLogin = configRepository.get(ConfigKeys.LAST_LOGIN)
-            if (lastLogin == null || lastLogin.value!!.toLong() != System.currentTimeMillis()) {
+            if (lastLogin == null || getDateDiff(lastLogin.value!!.toLong()) != 0L) {
                 userRepository.updateTotalDays(email!!)
             }
-            configRepository.insert(ConfigRoomModel(ConfigKeys.LAST_LOGIN, System.currentTimeMillis().toString()))
+            configRepository.insert(ConfigRoomModel(ConfigKeys.LAST_LOGIN, Date().time.toString()))
         }
     }
 

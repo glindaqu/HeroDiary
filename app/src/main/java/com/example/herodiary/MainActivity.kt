@@ -24,6 +24,8 @@ import com.example.herodiary.screens.calendar.DayInfo
 import com.example.herodiary.screens.shop.Shop
 import com.example.herodiary.screens.task.Task
 import com.example.herodiary.screens.components.BottomBar
+import com.example.herodiary.screens.note.Edit
+import com.example.herodiary.screens.note.NoteScreen
 import com.example.herodiary.ui.theme.HeroDiaryTheme
 import com.example.herodiary.ui.theme.blue1
 
@@ -47,6 +49,15 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("date") { NavType.StringType } )
                             ) {
                                 DayInfo(date = it.arguments?.getString("date")!!.toLong(), extras = intent.extras) {
+                                    navController.navigateUp()
+                                }
+                            }
+                            composable(Routes.NOTES.title) { NoteScreen(intent.extras, navController); selected = Routes.NOTES }
+                            composable(
+                                route = Routes.NOTES_EDIT.title + "/{id}",
+                                arguments = listOf(navArgument("id") { NavType.StringType } )
+                            ) {
+                                Edit(clickedId = it.arguments?.getString("id")!!.toInt()) {
                                     navController.navigateUp()
                                 }
                             }

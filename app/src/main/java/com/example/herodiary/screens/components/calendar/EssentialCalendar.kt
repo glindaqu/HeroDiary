@@ -76,7 +76,6 @@ fun EssentialCalendar(navController: NavHostController) {
                         isSelected = it == currentDay,
                         clickable = {
                             navController.navigate(Routes.DAY_INFO.title + "/" + (SimpleDateFormat("M, d yyyy").parse("${month.value}, $it ${LocalDate.now().year}")!!).time.toString())
-                            Log.d("date", Routes.DAY_INFO.title + "/" + (SimpleDateFormat("M, d yyyy").parse("${month.value}, $it ${LocalDate.now().year}")!!).time)
                         }
                     )
                 }

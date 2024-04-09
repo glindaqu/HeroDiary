@@ -27,6 +27,8 @@ object Routes {
     val SHOP = Route("Shop", Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart)
     val CALENDAR = Route("Calendar", selectedDraw = R.drawable.calendar_filled, unselectedDraw = R.drawable.calendar_outlined)
     val DAY_INFO = Route("DayInfo")
+    val NOTES = Route("Notes", selectedDraw = R.drawable.note_filled, unselectedDraw = R.drawable.note_outlined)
+    val NOTES_EDIT = Route("Note Edit")
 
-    val all = listOf(TASK, PROFILE, SHOP, CALENDAR)
+    val all = listOf(TASK, PROFILE, SHOP, CALENDAR, NOTES)
 }
