@@ -2,6 +2,7 @@ package com.example.herodiary.screens.calendar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import com.example.herodiary.screens.note.Item
 import com.example.herodiary.screens.task.AgendaTaskItem
+import com.example.herodiary.shared.getDateDiff
 import com.example.herodiary.viewModels.impl.CalendarViewModel
 import java.text.SimpleDateFormat
+import java.util.Date
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -41,6 +45,7 @@ fun DayInfo(date: Long, extras: Bundle?, backClick: () -> Unit) {
     val currentUser by viewModel.currentUser.collectAsState()
     viewModel.date = date
     val tasks by viewModel.getTasks(currentUser?.email ?: "").collectAsState(initial = listOf())
+    val notes by viewModel.getNotes(currentUser?.email ?: "").collectAsState(initial = listOf())
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -62,6 +67,25 @@ fun DayInfo(date: Long, extras: Bundle?, backClick: () -> Unit) {
         }
         items(tasks) {
             AgendaTaskItem(task = it)
+        }
+        item {
+            Text(
+                text = "Notes",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .padding(top = 30.dp, bottom = 15.dp),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                fontSize = 18.sp
+            )
+        }
+        items(notes.filter {
+            Date(it.creationDate).day == Date(date).day
+        }) {
+            Item(note = it) {
+                backClick()
+            }
         }
     }
 }

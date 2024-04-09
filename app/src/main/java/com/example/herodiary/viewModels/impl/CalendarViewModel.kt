@@ -3,8 +3,10 @@ package com.example.herodiary.viewModels.impl
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.herodiary.database.room.models.NoteRoomModel
 import com.example.herodiary.database.room.models.TaskRoomModel
 import com.example.herodiary.database.room.models.UserRoomModel
+import com.example.herodiary.repository.NoteRepository
 import com.example.herodiary.repository.TaskRepository
 import com.example.herodiary.repository.UserRepository
 import com.example.herodiary.viewModels.api.IProfileViewModel
@@ -17,6 +19,7 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
     private val taskRepository = TaskRepository(application)
     val currentUser = MutableStateFlow<UserRoomModel?>(null)
     private val userRepository = UserRepository(application)
+    private val noteRepository = NoteRepository(application)
     var date: Long = 0
 
     override fun setEmail(email: String) {
@@ -31,5 +34,9 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
 
     fun getTasks(email: String): Flow<List<TaskRoomModel>> {
         return taskRepository.getAllByDate(date, email)
+    }
+
+    fun getNotes(email: String): Flow<List<NoteRoomModel>> {
+        return noteRepository.getAll(email)
     }
 }
