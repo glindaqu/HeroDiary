@@ -13,7 +13,7 @@ fun schedulePushNotifications(context: Context) {
     val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
     val alarmPendingIntent by lazy {
         val intent = Intent(context, AlarmReceiver::class.java)
-        PendingIntent.getBroadcast(context, 0, intent, 0)
+        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
     val HOUR_TO_SHOW_PUSH = 22
     val calendar = GregorianCalendar.getInstance().apply {
