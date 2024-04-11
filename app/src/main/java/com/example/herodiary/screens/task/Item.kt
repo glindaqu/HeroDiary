@@ -62,6 +62,18 @@ fun TaskItem(task: TaskRoomModel, onUpdateStatus: (Boolean, Int) -> Unit) {
                     text = if (task.deadline != null) SimpleDateFormat("MMMM, dd", Locale.ENGLISH).format(task.deadline) else "null",
                     color = Color.Black.copy(0.7f)
                 )
+                Row(horizontalArrangement = Arrangement.spacedBy(15.dp), verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = "Reward: " + task.reward.toString() + "$",
+                        color = Color.Black.copy(0.7f),
+                        fontSize = 11.sp
+                    )
+                    Text(
+                        text = "XP: " + task.xp.toString(),
+                        color = Color.Black.copy(0.7f),
+                        fontSize = 11.sp
+                    )
+                }
                 Checkbox(checked = done?:false, enabled = !done!!, onCheckedChange = {
                     done = it
                     onUpdateStatus(done!!, task.id!!)
