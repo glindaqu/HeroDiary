@@ -12,6 +12,7 @@ import com.example.herodiary.database.ConfigKeys
 import com.example.herodiary.database.room.models.ConfigRoomModel
 import com.example.herodiary.database.room.models.UserRoomModel
 import com.example.herodiary.repository.ConfigRepository
+import com.example.herodiary.repository.SystemTaskRepository
 import com.example.herodiary.repository.UserRepository
 import com.example.herodiary.shared.getDateDiff
 import com.example.herodiary.shared.isOnline
@@ -30,6 +31,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     private var email: String? = null
     private val userRepository = UserRepository(app)
     private val configRepository = ConfigRepository(app)
+    private val systemTaskRepository = SystemTaskRepository(app)
 
     override fun attachContext(context: Context) {
         this.context = WeakReference(context)
@@ -114,13 +116,21 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
             if (lastLogin == null || getDateDiff(lastLogin.value!!.toLong()) != 0L) {
                 userRepository.updateTotalDays(email!!)
             }
+            val user = userRepository.getByEmail(email!!)
             configRepository.insert(ConfigRoomModel(ConfigKeys.LAST_LOGIN, Date().time.toString()))
+            systemTaskRepository.getAllByType(false, "LOGIN")?.forEach {
+                if (it.condition <= user?.totalDaysOnline!!) {
+                    systemTaskRepository.updateStatus(true, it.id!!)
+                    userRepository.updateXp(it.xp, email!!)
+                    userRepository.updateMoney(user.money!! + it.reward, email!!)
+                }
+            }
         }
     }
 
     override fun createUser(email: String) {
         viewModelScope.launch {
-            userRepository.insert(UserRoomModel(null, email, 0, 0, 1000))
+            userRepository.insert(UserRoomModel(null, email, 0, 0, 0))
         }
     }
 

@@ -1,7 +1,6 @@
 package com.example.herodiary.screens.task
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.herodiary.database.room.models.SystemTaskRoomModel
 import com.example.herodiary.database.room.models.TaskRoomModel
 import com.example.herodiary.state.TaskScreenStates
 import com.example.herodiary.ui.theme.blue1
@@ -24,7 +24,7 @@ import com.example.herodiary.viewModels.impl.TaskViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun View(taskList: List<TaskRoomModel>?, viewModel: TaskViewModel, email: String) {
+fun View(taskList: List<TaskRoomModel>?, systemTaskList: List<SystemTaskRoomModel>?, viewModel: TaskViewModel, email: String) {
     Scaffold(
         containerColor = blue1,
         floatingActionButton = {
@@ -50,6 +50,18 @@ fun View(taskList: List<TaskRoomModel>?, viewModel: TaskViewModel, email: String
                 TaskItem(item) { status, id ->
                     viewModel.updateStatus(status, id, email)
                 }
+            }
+            item {
+                Text(
+                    text = "System Tasks",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 30.dp)
+                        .padding(start = 10.dp)
+                )
+            }
+            items(systemTaskList ?: listOf()) { item ->
+                SystemTaskItem(item)
             }
         }
     }
