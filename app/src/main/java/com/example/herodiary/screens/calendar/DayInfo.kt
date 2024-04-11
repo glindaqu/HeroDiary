@@ -84,7 +84,7 @@ fun DayInfo(date: Long, extras: Bundle?, backClick: () -> Unit) {
             Date(it.creationDate).day == Date(date).day
         }) {
             Item(note = it) {
-                backClick()
+
             }
         }
     }

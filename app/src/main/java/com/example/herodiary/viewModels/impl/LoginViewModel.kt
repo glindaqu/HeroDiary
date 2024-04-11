@@ -14,6 +14,7 @@ import com.example.herodiary.database.room.models.UserRoomModel
 import com.example.herodiary.repository.ConfigRepository
 import com.example.herodiary.repository.UserRepository
 import com.example.herodiary.shared.getDateDiff
+import com.example.herodiary.shared.isOnline
 import com.example.herodiary.state.LoginStates
 import com.example.herodiary.viewModels.api.ILoginViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -55,6 +56,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     }
 
     override fun login(password: String, email: String) {
+        if (!isOnline(context.get()!!)) {
+            updateUiState(LoginStates.LOGIN_FAILED)
+            return
+        }
         uiState.value = LoginStates.REQUEST
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
@@ -68,6 +73,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     }
 
     override fun register(password: String, email: String) {
+        if (!isOnline(context.get()!!)) {
+            updateUiState(LoginStates.LOGIN_FAILED)
+            return
+        }
         uiState.value = LoginStates.REQUEST
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
@@ -82,6 +91,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app), ILoginViewModel 
     }
 
     fun loadProfile() {
+        if (!isOnline(context.get()!!)) {
+            updateUiState(LoginStates.LOGIN_FAILED)
+            return
+        }
         viewModelScope.launch {
             if (userRepository.getByEmail(email!!) == null)
                 createUser(email!!)
