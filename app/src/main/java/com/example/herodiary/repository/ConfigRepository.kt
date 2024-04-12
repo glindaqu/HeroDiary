@@ -12,6 +12,9 @@ class ConfigRepository(application: Application) {
     init {
         configDao = HeroBase.getDatabase(application).getConfigDao()
     }
+    suspend fun delete(key: String) {
+        configDao.delete(key)
+    }
     suspend fun get(key: String): ConfigRoomModel? {
         return configDao.get(key)
     }

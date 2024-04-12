@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,15 +36,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.herodiary.R
 import com.example.herodiary.screens.task.AgendaTaskItem
-import com.example.herodiary.screens.task.TaskItem
 import com.example.herodiary.viewModels.impl.ProfileViewModel
 
 @Composable
 fun Profile(extras: Bundle?) {
     val viewModel = ViewModelProvider(LocalContext.current as ComponentActivity)[ProfileViewModel::class.java]
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         if (extras?.getString("email") != null)
             viewModel.initUser(extras.getString("email")!!)
+        viewModel.attachContext(context)
     }
     val currentUser by viewModel.currentUser.collectAsState()
     val currentImage by viewModel.getImage().collectAsState(initial = null)
@@ -74,7 +76,9 @@ fun Profile(extras: Bundle?) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.Absolute.Center,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 item {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -108,6 +112,18 @@ fun Profile(extras: Bundle?) {
         }
         items(tasks) {
             AgendaTaskItem(task = it)
+        }
+        item {
+            Button(
+                onClick = { viewModel.logout() },
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                shape = RoundedCornerShape(5.dp),
+            ) {
+                Text(
+                    text = "Logout",
+                    fontSize = 18.sp,
+                )
+            }
         }
     }
 }

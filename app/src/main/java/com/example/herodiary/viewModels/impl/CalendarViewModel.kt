@@ -32,6 +32,10 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    override fun logout() {
+        TODO("Not yet implemented")
+    }
+
     fun getTasks(email: String): Flow<List<TaskRoomModel>> {
         return taskRepository.getAllByDate(date, email)
     }

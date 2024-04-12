@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.Flow
 interface ConfigDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(config: ConfigRoomModel)
-    @Delete
-    suspend fun delete(config: ConfigRoomModel)
+    @Query("DELETE FROM config WHERE `key` = :key")
+    suspend fun delete(key: String)
     @Query("SELECT * FROM config WHERE `key` = :key LIMIT 1")
     suspend fun get(key: String): ConfigRoomModel?
     @Query("UPDATE config SET value = :value WHERE `key` = :key")
