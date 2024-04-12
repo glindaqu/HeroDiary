@@ -33,6 +33,7 @@ import com.example.herodiary.shared.getDateDiff
 import com.example.herodiary.viewModels.impl.CalendarViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -52,7 +53,7 @@ fun DayInfo(date: Long, extras: Bundle?, backClick: () -> Unit) {
                 IconButton(onClick = { backClick() }) {
                     Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
                 }
-                Text(SimpleDateFormat("MMMM, d").format(date))
+                Text(SimpleDateFormat("MMMM, d", Locale.ENGLISH).format(date))
             }
             Text(
                 text = "Agenda",

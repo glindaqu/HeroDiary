@@ -2,7 +2,6 @@ package com.example.herodiary.viewModels.impl
 
 import android.app.Application
 import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,11 +43,12 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         return boughtRepository.getAll(currentUser.value?.email ?: "")
     }
 
-    fun buy(id: Int, cost: Int) {
+    fun buy(id: Int, cost: Int, res: Int) {
         viewModelScope.launch {
             if (currentUser.value?.money!! >= cost) {
                 boughtRepository.insert(BoughtRoomModel(null, currentUser.value?.email, id))
                 userRepository.updateMoney(email = currentUser.value?.email!!, money = currentUser.value?.money!! - cost)
+                updateImage(res)
             } else if (context.get() != null) {
                 Toast.makeText(context.get()!!, "Not enough money!", Toast.LENGTH_SHORT).show()
             }
