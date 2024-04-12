@@ -1,6 +1,8 @@
 package com.example.herodiary.screens.task
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,11 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.herodiary.database.room.models.TaskRoomModel
+import com.example.herodiary.notify.checkNotificationPermissions
+import com.example.herodiary.notify.scheduleNotification
 import com.example.herodiary.state.TaskScreenStates
 import com.example.herodiary.ui.theme.blue1
 import com.example.herodiary.viewModels.impl.TaskViewModel
@@ -45,6 +50,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +60,7 @@ fun Create(email: String, viewModel: TaskViewModel) {
     val datePickerState = rememberSheetState()
     var textState by remember { mutableStateOf("Select date") }
     var selectedDate by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    val context = LocalContext.current
     CalendarDialog(
         state = datePickerState,
         selection = CalendarSelection.Date { localDate ->
@@ -75,17 +82,19 @@ fun Create(email: String, viewModel: TaskViewModel) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.add(
-                        TaskRoomModel(
-                            null,
-                            titleState.text,
-                            false,
-                            selectedDate,
-                            descriptionState.text,
-                            email
-                        )
+                    val model = TaskRoomModel(
+                        null,
+                        titleState.text,
+                        false,
+                        selectedDate,
+                        descriptionState.text,
+                        email
                     )
-                    viewModel.updateUiState(TaskScreenStates.VIEW)
+                    if (checkNotificationPermissions(context)) {
+                        viewModel.add(model)
+                        scheduleNotification(context, model)
+                        viewModel.updateUiState(TaskScreenStates.VIEW)
+                    }
                 },
                 containerColor = Color.White,
             ) {

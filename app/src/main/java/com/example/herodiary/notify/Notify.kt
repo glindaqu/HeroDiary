@@ -1,36 +1,101 @@
 package com.example.herodiary.notify
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.AlertDialog
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Context.ALARM_SERVICE
 import android.content.Intent
+import android.os.Build
+import com.example.herodiary.database.room.models.TaskRoomModel
 import java.util.Calendar
-import java.util.GregorianCalendar
+import java.util.Date
+import android.provider.Settings
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
+import java.text.SimpleDateFormat
 
 
-fun schedulePushNotifications(context: Context) {
-    val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
-    val alarmPendingIntent by lazy {
-        val intent = Intent(context, AlarmReceiver::class.java)
-        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
-    val HOUR_TO_SHOW_PUSH = 22
-    val calendar = GregorianCalendar.getInstance().apply {
-        if (get(Calendar.HOUR_OF_DAY) >= HOUR_TO_SHOW_PUSH) {
-            add(Calendar.DAY_OF_MONTH, 1)
-        }
+@SuppressLint("ScheduleExactAlarm")
+fun scheduleNotification(context: Context, taskRoomModel: TaskRoomModel) {
+    val intent = Intent(context, Notification::class.java)
 
-        set(Calendar.HOUR_OF_DAY, HOUR_TO_SHOW_PUSH)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }
+    val title = "Whoa! There is a deadline! Hurry up!"
+    val message = "The task named ${taskRoomModel.title} is over today"
 
-    alarmManager.setRepeating(
-        AlarmManager.RTC_WAKEUP,
-        calendar.timeInMillis,
-        AlarmManager.INTERVAL_DAY,
-        alarmPendingIntent
+    intent.putExtra(titleExtra, title)
+    intent.putExtra(messageExtra, message)
+
+    val pendingIntent = PendingIntent.getBroadcast(
+        context,
+        notificationID,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
+
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val date = Date(taskRoomModel.deadline!!)
+    date.hours = 8
+    date.minutes = 0
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        date.time,
+        pendingIntent
+    )
+
+    showAlert(date.time, title, message, context)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun showAlert(time: Long, title: String, message: String, context: Context) {
+    val date = Date(time)
+
+    AlertDialog.Builder(context)
+        .setTitle("Notification Scheduled")
+        .setMessage(
+            "Title: $title\nMessage: $message\nAt: ${SimpleDateFormat("MMMM, dd, yyyy").format(date)} ${SimpleDateFormat("m, hh").format(date)}"
+        )
+        .setPositiveButton("Okay") { _, _ -> }
+        .show()
+}
+
+fun getTime(date: Date): Long {
+    val minute = 0
+    val hour = 8
+
+    val calendar = Calendar.getInstance()
+    calendar.set(date.year, date.month, date.day, hour, minute)
+
+    return calendar.timeInMillis
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@SuppressLint("ServiceCast")
+fun checkNotificationPermissions(context: Context): Boolean {
+    val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    val isNotifyEnabled = notificationManager.areNotificationsEnabled()
+    val isAlarmEnabled = alarmManager.canScheduleExactAlarms()
+
+    if (!isNotifyEnabled) {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        context.startActivity(intent)
+
+        return false
+    }
+
+    if (!isAlarmEnabled) {
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        context.startActivity(intent)
+
+        return false
+    }
+
+    return true
 }
