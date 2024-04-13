@@ -47,6 +47,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -92,7 +93,7 @@ fun Create(email: String, viewModel: TaskViewModel) {
                     )
                     if (checkNotificationPermissions(context)) {
                         viewModel.add(model)
-                        scheduleNotification(context, model)
+                        scheduleNotification(context, "Whoa! There is deadline!", "The task ${model.title} ends today! Hurry up!", Date(selectedDate))
                         viewModel.updateUiState(TaskScreenStates.VIEW)
                     }
                 },

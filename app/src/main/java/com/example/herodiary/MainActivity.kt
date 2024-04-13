@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.herodiary.notify.createNotificationChannel
 import com.example.herodiary.screens.Profile
 import com.example.herodiary.screens.calendar.CalendarScreen
 import com.example.herodiary.screens.calendar.DayInfo
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel(this)
         setContent {
             val navController = rememberNavController()
             var selected by remember { mutableStateOf(Routes.PROFILE) }

@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.example.herodiary.R
 
 
-const val notificationID = 121
+const val notificationID = 1
 const val channelID = "channel1"
 const val titleExtra = "titleExtra"
 const val messageExtra = "messageExtra"
